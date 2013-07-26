@@ -56,6 +56,7 @@ var process = function(e,data){
  	var $op = $("#orginalPost");
  	var $win = $("#winner");
 
+
  	$op.find("#op_title").html(data.post.title);
  	$op.find('#op_content').html(data.post.content);
 
