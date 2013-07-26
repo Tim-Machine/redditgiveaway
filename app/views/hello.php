@@ -39,22 +39,35 @@
               <button type="submit" class="btn">Search</button>
             </div>
           </form>
+          <div id="urlLink"></div>
           <div id="errors" class="label label-important" ></div>
+
+          <div id="options">
+            <div>Options</div>
+            <div id="option_randnum">
+              <input type='checkbox' disabled  id="randomnumber" checked> Random number required?
+            </div>
+          </div>
         </div>
         <!-- end form -->
       </div>
       <div class="row">
         <!-- start orginal post -->
         <div id="orginalPost" class="span6">
-          <h3 id="op_title"></h3>
-          <div id="op_content">win something really cool!</div>
+          <h3 id="op_title">^^ Put your url  in that search bar</h3>
+          <div id="op_content"></div>
         </div>
         <!-- end orginal post -->
 
         <!-- start winner -->
         <div id="winner" class="span6">
-          <h3 id="win_author">ian</h3>
-          <div id="win_content"> i like pie </div>
+          <h3 id="win_author"></h3>
+          <div id="win_content"></div>
+
+          <div id="controls" class='row'>
+            <button id="searchAgain"  class="btn btn-danger"> Serach again </button>
+            <button id="selectWinner" class="btn btn-success"> Select Winner </button>
+          </div>
         </div>
         <!-- end winnder -->
       </div>
@@ -73,6 +86,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/assets/js/main.js"></script>
 
   </body>

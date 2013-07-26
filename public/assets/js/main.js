@@ -19,7 +19,9 @@ var search = function(){
 		showError(errors.invalid_url);
 		return;
 	}
+
 	var url_encoded = encodeURIComponent(link);
+
 	makeRequest(url_encoded, $url)
 }
 /**
@@ -59,6 +61,9 @@ var process = function(e,data){
 
 	$win.find('#win_author').html(data.winner.author);
 	$win.find('#win_content').html(data.winner.content);
+
+	$win.fadeIn('fast');
+	$win.data('post-id',data.winner.postId);
 }
 
 /**
@@ -81,10 +86,40 @@ var showError = function(message){
 	return;
 }
 
+var queryObj  = function() {
+    var result = {}, keyValuePairs = location.search.slice(1).split('&');
+
+    keyValuePairs.forEach(function(keyValuePair) {
+        keyValuePair = keyValuePair.split('=');
+        result[keyValuePair[0]] = keyValuePair[1] || '';
+    });
+    return result;
+}
+
+var selectWinner = function(){
+  alert('still working on this feature');
+  alert('Thank you for trying this out and I am welcome to any feed back you have!');
+}
+
+
 
 $(document).ready(function(){
 	$('#search').submit(function(e){
 			e.preventDefault();
 			search();
 	});
+
+	var queryString = queryObj();
+	//todo -- clean this nasty up
+	if(queryString.url != undefined ){
+		url = decodeURIComponent(queryString.url);
+		if(validUrl(url))
+		{
+			$("#url").val(url);
+		}
+	}
+
+	$('#searchAgain').click(function(){ search(); });
+	$('#selectWinner').click(function(){selectWinner(); });
+
 });

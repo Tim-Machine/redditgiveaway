@@ -18,17 +18,31 @@ class HomeController extends BaseController {
        protected  $commentFeed;
        private $url ;
 
+       /** shows the home page
+        *
+        * @return type
+        */
        public function showWelcome()
 	{
 		return View::make('hello');
 	}
 
-
-        public function getComments($url = null, $invalid = null)
+        /**
+         *  where all the magic begins
+         * delevers json responce with a winner
+         * @param type $url
+         * @param type $invalid
+         * @return type
+         */
+        public function getComments()
         {
 
             $url = urldecode($_GET['url']);
 
+            // is a winning number provided?
+            // $winningNumber = (isset($_GET['winnum']))? false : $_GET['winnum'];
+            $winningNumber = false;
+            $invalid = null;
             $this->url = $url;
 
             $urlJson = $this->urlFormat();
@@ -42,7 +56,13 @@ class HomeController extends BaseController {
 
             $dataArray = json_decode($data);
 
-            $winner = $this->selectWinner($dataArray[1]->data->children, $invalid);
+            if($winningNumber)
+            {
+                $winner = $this->selectWinnerByNumber($dataArray[1]->data->children, $invalid);
+            }
+            else{
+                $winner = $this->selectWinner($dataArray[1]->data->children, $invalid);
+            }
 
             $post = $this->getPost($dataArray[0]);
 
@@ -51,7 +71,12 @@ class HomeController extends BaseController {
             return json_encode($responce);
         }
 
-
+        /**
+         *
+         * @param type $data
+         * @param type $cantBe
+         * @return type
+         */
         private function  selectWinner($data, $cantBe = null)
         {
 
@@ -72,6 +97,26 @@ class HomeController extends BaseController {
         }
 
         /**
+         * select a winning entry that matches the number provided
+         * @param  array $data   all comment entries
+         * @param  arary $cantBe entry ids that that can not win
+         * @return array         data about the winning entry
+         */
+        private function selectWinnerByNumber($data, $number ,$cantBe = null)
+        {
+            $possblewinner = array();
+            $i = 0;
+            foreach($data as $entry){
+                if( strpos( $number, $entry->body_html)){
+                    $possblewinner->$i = $data[$i];
+                    $i++;
+                }
+            }
+
+            return $this->selectWinner($possblewinner, $cantBe);
+        }
+
+        /**
          * gets this post so we can display it to the user.
          */
         private function getPost($data)
@@ -88,7 +133,11 @@ class HomeController extends BaseController {
             );
         }
 
-
+        /**
+         * removes all whitespace from the content body & escapes quotes
+         * @param  string $html [description]
+         * @return [type]       [description]
+         */
         private function cleanHTML($html)
         {
             // we want to remove all linebreaks, returns & tabs
@@ -101,6 +150,11 @@ class HomeController extends BaseController {
             return html_entity_decode($cleaned);
         }
 
+        /**
+         * validate that url is 1. from reddit.com 2. Is a valid url on reddit.compact
+         * @param  string $url url to be validated
+         * @return bool      is valid url ?
+         */
         private function validateUrl($url)
         {
             $UrlData = parse_url($url);
@@ -129,6 +183,10 @@ class HomeController extends BaseController {
 
         }
 
+        /**
+         * validates that we are using the JSON fromat from Reddit
+         * @return void
+         */
         private function urlFormat()
         {
             $urlData = explode('.', $this->url);
@@ -137,11 +195,15 @@ class HomeController extends BaseController {
             {
                 return $this->url;
             }
-
             return $this->url = $this->url.".json";
 
         }
 
+        /**
+         * just a debug tool
+         * @param  any $data dumps any var onto the screen.
+         * @return void
+         */
         private function debug($data)
         {
             echo "<pre>";
